@@ -28,6 +28,7 @@ class VentanaInicio extends JFrame{
 		Lamina lamina1=new Lamina();
 		add(lamina1);
 		lamina1.setBackground(new Color(0,28,115));
+		
 	}
 }
 
@@ -40,12 +41,16 @@ class VentanaJuego extends JFrame{
 		//Cambia el icono predeterminado de la ventana
 		Image Icono=pantalla.getImage("src/Connect Dots.png");
 		setIconImage(Icono);
+		Lamina2 lamina2=new Lamina2();
+		add(lamina2);
+		lamina2.setBackground(new Color(0,28,115));
 	}
 }
 
 class Lamina extends JPanel{
 	private Image logo;
 	private JButton inicio,cierre;
+	private JTextField nick;
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		try {
@@ -60,15 +65,26 @@ class Lamina extends JPanel{
 	}
 	public Lamina() {
 		setLayout(null);
+		JLabel name=new JLabel("Nombre:");
+		name.setForeground(Color.WHITE);
+		Font font=new Font("Bungee", Font.BOLD,20);
+		name.setFont(font);
+		nick=new JTextField();
 		inicio=new JButton("Empezar"); 
 		cierre=new JButton("Salir");
 		inicio.setBounds(720, 600, 100, 40);
 		cierre.setBounds(720, 650, 100, 40);
+		nick.setBounds(720, 700, 100, 20);
+		name.setBounds(630, 690, 100, 40);
 		//inicio.setBackground(new Color(253,230,53).brighter().brighter().brighter());
 		Inicio launch=new Inicio();
+		Cierre close=new Cierre();
 		add(inicio);
 		add(cierre);
+		add(name);
+		add(nick);
 		inicio.addActionListener(launch);
+		cierre.addActionListener(close);
 		
 		
 	}
@@ -79,9 +95,64 @@ class Lamina extends JPanel{
 			// TODO Auto-generated method stub
 			VentanaJuego ventana2=new VentanaJuego();
 			ventana2.setVisible(true);
-			//dispose();
+			Window w =SwingUtilities.getWindowAncestor(Lamina.this);
+			w.dispose();
 		}
 		
 	}
+	private class Cierre implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			Window v= SwingUtilities.getWindowAncestor(Lamina.this);
+			v.dispose();
+		}
+		
+	}
+}
+class Lamina2 extends JPanel implements MouseListener{
+	private JButton connect,send,back ;
+	private ListaEnlazada nodo;
+	public Lamina2 () {
+		setLayout(null);
+		connect=new JButton();
+		send=new JButton();
+		back=new JButton();
+		nodo=new ListaEnlazada();
+		this.addMouseListener(this);
+		
+	}
 	
+	public void paint(Graphics e) {
+		for (Nodo nodos:nodo) {
+			nodos.pintar(e);
+		}
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }

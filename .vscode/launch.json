@@ -5,6 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "Jugador",
+            "request": "launch",
+            "mainClass": "Jugador",
+            "projectName": "ConnectDots"
+        },
+        {
+            "type": "java",
+            "name": "Servidor",
+            "request": "launch",
+            "mainClass": "Servidor",
+            "projectName": "ConnectDots"
+        },
+        {
             "name": "Java",
             "type": "java",
             "request": "launch",

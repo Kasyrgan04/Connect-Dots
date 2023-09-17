@@ -1,21 +1,102 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.net.Socket;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 public class Jugador {
 
-	public static void main(String[] args) {
+	private Socket socket;
+	private BufferedReader bufferedReader;
+	private BufferedWriter bufferedWriter;
+	private String username;
+
+	public Jugador (Socket socket, String username){
+		try {
+			this.socket = socket;
+			this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			this.username = username;
+
+		} catch (IOException e) {
+			closeEverything (socket,bufferedReader,bufferedWriter);
+
+		}
+	}
+
+	public void sendMessage(){
+		try {
+			bufferedWriter.write(username);
+			bufferedWriter.newLine();
+			bufferedWriter.flush();
+
+			Scanner scanner = new Scanner(System.in);
+			while(socket.isConnected()){
+				String messageToSend = scanner.nextLine();
+				bufferedWriter.write(username + ": " + messageToSend);
+				bufferedWriter.newLine();
+				bufferedWriter.flush();
+
+			}
+
+		} catch (IOException e) {
+			closeEverything(socket,bufferedReader,bufferedWriter);
+		}
+	}
+
+	public void listenForMessage(){
+		new Thread(new Runnable() {
+			public void run(){
+				String msgFromGroup;
+				while(socket.isConnected()){
+					try {
+						msgFromGroup = bufferedReader.readLine();
+						System.out.println(msgFromGroup);
+					} catch (IOException e) {
+						closeEverything(socket,bufferedReader,bufferedWriter);
+
+					}
+				}
+			}
+		}).start();
+	}
+	public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter){
+		try {
+            if(bufferedReader != null){
+                bufferedReader.close();
+            }
+            if (bufferedWriter != null){
+                bufferedWriter.close();
+            }
+            if (socket != null){
+                socket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
+
+	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		VentanaInicio ventana1=new VentanaInicio();
+		//VentanaInicio ventana1=new VentanaInicio();
 		
-		ventana1.setVisible(true);
-		ventana1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//ventana1.setVisible(true);
+		//ventana1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("enter your username");
+		String username = scanner.nextLine();
+		Socket socket = new Socket("localhost",1234);
+		Jugador jugador = new Jugador(socket,username);
+		jugador.listenForMessage();
+		jugador.sendMessage();
 		
 	}
 
-}
+}/* 
 class VentanaInicio extends JFrame{
 	public VentanaInicio() {
 		setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -124,7 +205,7 @@ class Lamina2 extends JPanel implements MouseListener{
 		
 	}
 	
-	public void paint(Graphics e) {
+	/*public void paint(Graphics e) {
 		for (Nodo nodos:nodo) {
 			nodos.pintar(e);
 		}
@@ -154,5 +235,4 @@ class Lamina2 extends JPanel implements MouseListener{
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
-	}
-}
+	}*/

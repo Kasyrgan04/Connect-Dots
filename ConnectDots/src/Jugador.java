@@ -2,10 +2,16 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import org.json.simple.JSONObject;
 
 public class Jugador {
 
@@ -13,13 +19,38 @@ public class Jugador {
 	private BufferedReader bufferedReader;
 	private BufferedWriter bufferedWriter;
 	private String username;
+	
+
+
+
+	
+	private String jsonString;
+	private OutputStreamWriter outputStreamWriter;
+	private JSONObject jsonObject;
+	
+	
 
 	public Jugador (Socket socket, String username){
 		try {
 			this.socket = socket;
 			this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			this.outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
 			this.username = username;
+
+			this.jsonObject = new JSONObject();
+			this.jsonObject.put("Username", username);
+
+			System.out.println(this.jsonObject.toJSONString());
+			System.out.println("Json object created");
+
+
+			this.outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(),StandardCharsets.UTF_8);
+			
+			
+			
+
+
 
 		} catch (IOException e) {
 			closeEverything (socket,bufferedReader,bufferedWriter);
@@ -36,9 +67,16 @@ public class Jugador {
 			Scanner scanner = new Scanner(System.in);
 			while(socket.isConnected()){
 				String messageToSend = scanner.nextLine();
-				bufferedWriter.write(username + ": " + messageToSend);
+				//jsonObject.put("Message", messageToSend);
+				System.out.println(jsonObject.toJSONString());
+				bufferedWriter.write(jsonObject.toString());
 				bufferedWriter.newLine();
 				bufferedWriter.flush();
+				
+
+				//bufferedWriter.write(messageToSend);
+				//bufferedWriter.newLine();
+				//bufferedWriter.flush();
 
 			}
 

@@ -1,3 +1,13 @@
 {
-    "java.debug.settings.onBuildFailureProceed": true
+    "java.debug.settings.onBuildFailureProceed": true,
+    "java.project.referencedLibraries": {
+        "include": [
+            "ConnectDots/lib/jackson-core-2.15.2.jar",
+            "ConnectDots/lib/jackson-databind-2.15.2-javadoc.jar",
+            "ConnectDots/jackson-core-2.15.2.jar"
+        ],
+        "exclude": [
+            "c:\\ConnectDots\\lib\\jackson-databind-2.15.2-javadoc.jar"
+        ]
+    }
 }

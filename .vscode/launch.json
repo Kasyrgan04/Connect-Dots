@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "JsonTest",
+            "request": "launch",
+            "mainClass": "JsonTest",
+            "projectName": "ConnectDots"
+        },
+        {
+            "type": "java",
+            "name": "test",
+            "request": "launch",
+            "mainClass": "test",
+            "projectName": "ConnectDots"
+        },
+        {
+            "type": "java",
             "name": "Jugador",
             "request": "launch",
             "mainClass": "Jugador",

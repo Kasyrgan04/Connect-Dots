@@ -12,6 +12,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+/**
+ * Clase Encargada de manejar las comunicaciones entre cliente-servidor
+ */
+
 public class ClientHandler implements Runnable{
 
     public static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
@@ -28,6 +32,10 @@ public class ClientHandler implements Runnable{
     private InputStream inputStream;
     private JSONObject jsonObject;
 
+    /**
+     * Constructor
+     * @param socket Socket a utilizar para crear conexion con el servidor.
+     */
     public ClientHandler(Socket socket){
         try {
             this.socket = socket;
@@ -45,7 +53,9 @@ public class ClientHandler implements Runnable{
     }
     
     
-
+    /**
+     * Metodo principal mantiene la comunicacion abierta.
+     */
     @Override
     public void run() {
         String messageFromClient;
@@ -69,6 +79,10 @@ public class ClientHandler implements Runnable{
 
     }
 
+    /**
+     * Metodo para enviar mensajes a todos clientes y al servidor. 
+     * @param messageToSend Informacion a enviar
+     */
     public void broadcastMessage ( String messageToSend){
             for(ClientHandler clientHandler: clientHandlers){
                 try {
@@ -83,11 +97,20 @@ public class ClientHandler implements Runnable{
             }
         }
 
+    /**
+     * Metodo para cerrar comunicar la desconexion de un cliente.
+     */
     public void removeClientHandler(){
         clientHandlers.remove(this);
         broadcastMessage("SERVER: " + clientUsername + " has left" );
     }
 
+    /**
+     * Metodo para cerrar las comunicaciones en caso de error
+     * @param socket Socket a cerrar
+     * @param bufferedReader BufferedReader a cerrar
+     * @param bufferedWriter BufferedWriter a cerrar
+     */
     public void closeEverything (Socket socket,BufferedReader bufferedReader,BufferedWriter bufferedWriter){
         removeClientHandler();
         try {

@@ -1,18 +1,31 @@
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.json.simple.JSONObject;
-
+/**
+ *Clase principal para objeto jugador
+ *
+ */
 public class Jugador {
 
 	private Socket socket;
@@ -29,7 +42,11 @@ public class Jugador {
 	private JSONObject jsonObject;
 	
 	
-
+	/**
+	 * Constructor de Clase jugador
+	 * @param socket Socket al que conectarse
+	 * @param username Nombre del usuario a utilizar
+	 */
 	public Jugador (Socket socket, String username){
 		try {
 			this.socket = socket;
@@ -37,12 +54,14 @@ public class Jugador {
 			this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			this.outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
 			this.username = username;
-
+			/**
+			 * Adds the username to the JSON objecto to be sent to the server on initial connection. 
+			 */
 			this.jsonObject = new JSONObject();
 			this.jsonObject.put("Username", username);
 
-			System.out.println(this.jsonObject.toJSONString());
-			System.out.println("Json object created");
+			//System.out.println(this.jsonObject.toJSONString());
+			//System.out.println("Json object created");
 
 
 			this.outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(),StandardCharsets.UTF_8);
@@ -57,7 +76,9 @@ public class Jugador {
 
 		}
 	}
-
+	/**
+	 * Metodo para enviar informacion desde el cliente al servidor
+	 */
 	public void sendMessage(){
 		try {
 			bufferedWriter.write(username);
@@ -65,9 +86,12 @@ public class Jugador {
 			bufferedWriter.flush();
 
 			Scanner scanner = new Scanner(System.in);
+			
 			while(socket.isConnected()){
 				String messageToSend = scanner.nextLine();
 				//jsonObject.put("Message", messageToSend);
+
+				//Envia la informacion del cliente en formato Json. 
 				System.out.println(jsonObject.toJSONString());
 				bufferedWriter.write(jsonObject.toString());
 				bufferedWriter.newLine();
@@ -85,6 +109,9 @@ public class Jugador {
 		}
 	}
 
+	/**
+	 * Metodo para recibir informacion desde el servidor
+	 */
 	public void listenForMessage(){
 		new Thread(new Runnable() {
 			public void run(){
@@ -101,6 +128,13 @@ public class Jugador {
 			}
 		}).start();
 	}
+
+	/**
+	 * Metodo para hacer un cierre en caso de error
+	 * @param socket Socket a cerrar
+	 * @param bufferedReader Buffered Reader a cerrar 
+	 * @param bufferedWriter Buffered Writer a cerrar
+	 */
 	public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter){
 		try {
             if(bufferedReader != null){
@@ -116,7 +150,12 @@ public class Jugador {
             e.printStackTrace();
         }
 	}
-
+	
+	/**
+	 * Metodo principal de la clase
+	 * 
+	 * 
+	 */
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		//VentanaInicio ventana1=new VentanaInicio();
@@ -125,7 +164,7 @@ public class Jugador {
 		//ventana1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("enter your username");
+		System.out.println("Ingresar usuario");
 		String username = scanner.nextLine();
 		Socket socket = new Socket("localhost",1234);
 		Jugador jugador = new Jugador(socket,username);
@@ -134,8 +173,10 @@ public class Jugador {
 		
 	}
 
-}/* 
+}
+ 
 class VentanaInicio extends JFrame{
+
 	public VentanaInicio() {
 		setExtendedState(Frame.MAXIMIZED_BOTH);
 		setTitle("Connect Dots");

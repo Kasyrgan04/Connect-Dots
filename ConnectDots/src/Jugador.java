@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -158,25 +159,23 @@ public class Jugador {
 	 */
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		//VentanaInicio ventana1=new VentanaInicio();
+		VentanaInicio ventana1=new VentanaInicio();
 		
-		//ventana1.setVisible(true);
-		//ventana1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		ventana1.setVisible(true);
+		ventana1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Ingresar usuario");
+		/*Scanner scanner = new Scanner(System.in);
+		System.out.println("enter your username");
 		String username = scanner.nextLine();
 		Socket socket = new Socket("localhost",1234);
 		Jugador jugador = new Jugador(socket,username);
 		jugador.listenForMessage();
-		jugador.sendMessage();
+		jugador.sendMessage();*/
 		
 	}
 
-}
- 
+} 
 class VentanaInicio extends JFrame{
-
 	public VentanaInicio() {
 		setExtendedState(Frame.MAXIMIZED_BOTH);
 		setTitle("Connect Dots");
@@ -236,7 +235,6 @@ class Lamina extends JPanel{
 		cierre.setBounds(720, 650, 100, 40);
 		nick.setBounds(720, 700, 100, 20);
 		name.setBounds(630, 690, 100, 40);
-		//inicio.setBackground(new Color(253,230,53).brighter().brighter().brighter());
 		Inicio launch=new Inicio();
 		Cierre close=new Cierre();
 		add(inicio);
@@ -254,7 +252,9 @@ class Lamina extends JPanel{
 		public void actionPerformed(ActionEvent e)  {
 			// TODO Auto-generated method stub
 			VentanaJuego ventana2=new VentanaJuego();
+			ventana2.setBackground(new Color(0,28,115));
 			ventana2.setVisible(true);
+			ventana2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			Window w =SwingUtilities.getWindowAncestor(Lamina.this);
 			w.dispose();
 		}
@@ -271,47 +271,59 @@ class Lamina extends JPanel{
 		
 	}
 }
-class Lamina2 extends JPanel implements MouseListener{
+class Lamina2 extends JPanel {
+	private Cola malla;
 	private JButton connect,send,back ;
-	private ListaEnlazada nodo;
 	public Lamina2 () {
 		setLayout(null);
 		connect=new JButton();
 		send=new JButton();
 		back=new JButton();
-		nodo=new ListaEnlazada();
-		this.addMouseListener(this);
-		
-	}
-	
-	/*public void paint(Graphics e) {
-		for (Nodo nodos:nodo) {
-			nodos.pintar(e);
+		malla= new Cola();
+		int x=550;
+		int y=205;
+		while(x!=1030 && y!=680) {
+			JRadioButton n = new JRadioButton();
+			malla.enqueue(n);
+			n.setBounds(x, y, 20, 20);
+			add(n);
+			x=x+60;
+			y=y+60;
+			System.out.println(x);
+			System.out.println(y);
 		}
 	}
 	
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void paint(Graphics e) {
+		e.drawRect(540, 200, 515, 510);
+		e.setColor(Color.WHITE);
+		e.fillRect(540, 200, 515, 510);
+		/*e.setColor(Color.BLACK);
+		e.drawOval(550, 205, 20, 20);
+		e.drawOval(610, 205, 20, 20);
+		e.drawOval(670, 205, 20, 20);
+		e.drawOval(730, 205, 20, 20);
+		e.drawOval(790, 205, 20, 20);
+		e.drawOval(850, 205, 20, 20);
+		e.drawOval(910, 205, 20, 20);
+		e.drawOval(970, 205, 20, 20);
+		e.drawOval(1030, 205, 20, 20);
+		e.drawOval(550, 260, 20, 20);
+		e.drawOval(550, 320, 20, 20);
+		e.drawOval(550, 380, 20, 20);
+		e.drawOval(550, 440, 20, 20);
+		e.drawOval(550, 500, 20, 20);
+		e.drawOval(550, 560, 20, 20);
+		e.drawOval(550, 620, 20, 20);
+		e.drawOval(550, 680, 20, 20);*/
 	}
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	
+}
+class Cola{
+	public LinkedList lista=new LinkedList();
+	
+	public void enqueue(Object element) {
+		this.lista.insertLast(element);
 	}
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}*/
+
+}

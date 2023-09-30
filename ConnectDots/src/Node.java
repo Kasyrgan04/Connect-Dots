@@ -1,14 +1,9 @@
-
-public class ListaEnlazada {
-	
-
 	//Esta clase define las operaciones del nodo como tal
 	class Node {
 	/*Se definen los atributos de la lista
-	this es el equivalente de self en python
 	Se utiliza cuando se quiere modificar los atributos de la clase*/
 		private Object data; //Esta es la variable del dato que se almacena
-		private Node next; //esta es la referencia al siguiente dato
+		Node next; //esta es la referencia al siguiente dato
 		
 
 		public Node(Object data){
@@ -33,19 +28,25 @@ public class ListaEnlazada {
 			this.next=node;
 		}
 	}
+
 	//Esta clase utiliza los nodos que se acaban de crear
 	class LinkedList{
 		private Node head;
+		private Node last;
 		private int size;
 	//Setea el puntero de la lista en vacio con tamaño cero
 	//Es el constructor de la clase
 		public LinkedList(){
 			this.head=null;
+			this.last=null;
 			this.size=0;
 		}
 	//retorna un booleano para saber si la lista está vacia o no
 		public boolean isEmpty(){
-			return this.head==null;
+			if(this.head==null && this.last==null) {
+				return true;
+			}
+			return false;
 		}
 		
 	//retorna el tamaño de la lista
@@ -55,10 +56,27 @@ public class ListaEnlazada {
 	//Inserción al inicio
 		public void insertFirst(Object data){
 			Node newNode=new Node(data); //crea nuevo nodo con el dato recibido
-			newNode.next=this.head; //El puntero va a ser lo que antes era la cabea de la lista
-			this.head=newNode; //La cabeza va a ser le nuevo nodo
+			if(this.isEmpty()) {
+				this.head=this.last=newNode; //La cabeza va a ser le nuevo nodo
+			} else {
+				newNode.setNext(this.head);
+				this.head=newNode;
+			}
+			
 			this.size++;
 		}
+		
+		public void insertLast(Object data) {
+			 Node newNode = new Node(data);
+			 if (this.isEmpty()) { 
+				 this.head = this.last = newNode;
+			 } else { 
+				 this.last.setNext(newNode);
+				 this.last = newNode;
+			 }
+			 this.size++;
+		}
+		
 	//Eliminar primer elemento
 		public Node deletionFirst(){
 			if(this.head!=null){
@@ -70,14 +88,6 @@ public class ListaEnlazada {
 			else{
 				return null;
 			}	
-		}
-	//Imprime la lista
-		public void displayList(){
-			Node current=this.head; //se crea un nodo temporal, el cual es el head de la lista
-			while(current!=null){
-				System.out.println(current.getData());
-				current=current.getNext();
-			}
 		}
 	//Busca un dato en la lista
 		public Node find(Object searchValue){
@@ -91,22 +101,4 @@ public class ListaEnlazada {
 			}
 			return null;
 		}
-	//Eliminar un dato dado
-		public Node delete(Object searchValue) {
-			Node current=this.head;
-			Node previous=this.head;
-			while(current!=null) {
-				if(current.getData().equals(searchValue)) {
-					if(current==this.head) {
-						this.head=this.head.getNext();
-					}else {
-						previous.setNext(current.getNext());
-					}return current;
-				}else {
-					previous=current;
-					current=current.getNext();
-				}
-			}return null;
-		}
 	}
-}
